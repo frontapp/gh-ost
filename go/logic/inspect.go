@@ -223,7 +223,7 @@ func (this *Inspector) validateGrants() error {
 			if strings.Contains(grant, `SUPER`) && strings.Contains(grant, ` ON *.*`) {
 				foundSuper = true
 			}
-			if strings.Contains(grant, `REPLICATION CLIENT`) && strings.Contains(grant, ` ON *.*`) {
+			if (strings.Contains(grant, `REPLICATION CLIENT`) || strings.Contains(grant, `BINLOG MONITOR`)) && strings.Contains(grant, ` ON *.*`) {
 				foundReplicationClient = true
 			}
 			if strings.Contains(grant, `REPLICATION SLAVE`) && strings.Contains(grant, ` ON *.*`) {
