@@ -7,6 +7,7 @@ package binlog
 
 import (
 	"fmt"
+	"strings"
 	"sync"
 
 	"github.com/github/gh-ost/go/base"
@@ -39,9 +40,14 @@ func NewGoMySQLReader(migrationContext *base.MigrationContext) (binlogReader *Go
 
 	serverId := uint32(migrationContext.ReplicaServerId)
 
+	// Select SQL flavor based on version number retrieved during Inspector init
+	flavor := gomysql.MySQLFlavor
+	if strings.Contains(migrationContext.InspectorMySQLVersion, "MariaDB") {
+		flavor = gomysql.MariaDBFlavor
+	}
 	binlogSyncerConfig := replication.BinlogSyncerConfig{
 		ServerID:   serverId,
-		Flavor:     "mysql",
+		Flavor:     flavor,
 		Host:       binlogReader.connectionConfig.Key.Hostname,
 		Port:       uint16(binlogReader.connectionConfig.Key.Port),
 		User:       binlogReader.connectionConfig.User,
